@@ -16,13 +16,26 @@ function getInfo (caseNumber) {
         var i;
         var temp =Array();
         let obj = JSON.parse(res.getBody().toString());
-        for (i = 0;i<4;i++){
-            author_id = obj.comments[i].author_id;
-            author_name = getAuthor (author_id);
-            if (obj.comments[i].public === true){
-                temp.push("From: "+author_name+"\nUpdated at: "+ obj.comments[i].created_at + "\n\n"+obj.comments[i].body);
-            } else {
-                temp.push ("**INTERNAL REPLY** \nUpdated at: "+ obj.comments[i].created_at + "\n\n"+obj.comments[i].body);
+        let num_of_comments = obj.count;
+        if (num_of_comments > 4 ) {
+            for (i = 0;i<4;i++){
+                author_id = obj.comments[i].author_id;
+                author_name = getAuthor (author_id);
+                if (obj.comments[i].public === true){
+                    temp.push("From: "+author_name+"\nUpdated at: "+ obj.comments[i].created_at + "\n\n"+obj.comments[i].body);
+                } else {
+                    temp.push ("**INTERNAL REPLY**\nFrom: "+author_name+ "\nUpdated at: "+ obj.comments[i].created_at + "\n\n"+obj.comments[i].body);
+                }
+            }
+        } else {
+            for (i=0;i<num_of_comments;i++){
+                author_id = obj.comments[i].author_id;
+                author_name = getAuthor (author_id);
+                if (obj.comments[i].public === true){
+                    temp.push("From: "+author_name+"\nUpdated at: "+ obj.comments[i].created_at + "\n\n"+obj.comments[i].body);
+                } else {
+                    temp.push ("**INTERNAL REPLY**\nFrom: "+author_name+ "\nUpdated at: "+ obj.comments[i].created_at + "\n\n"+obj.comments[i].body);
+                }
             }
         }
         return (temp);
@@ -35,4 +48,3 @@ function getInfo (caseNumber) {
 
 
 module.exports = getInfo
-
